@@ -52,7 +52,7 @@ tags = [
 
 {activityUrl}'''
 
-    out = template.format(activityName=activity.name, 
+    out = template.format(activityName=re.sub('"', '\\"', activity.name), 
     activityTime=activity.time, 
     activityDate=activity.time, 
     activityType=activity.type, 
@@ -62,7 +62,7 @@ tags = [
     
     file_name = re.sub('\\W', '', '{} {}.md'.format(activity.name, activity.time))
     absolute_file = 'content/activities/{}.md'.format(file_name)
-    print('writing {}', absolute_file)
+    print('writing {}'.format(absolute_file))
     file = open(absolute_file, 'w')
     file.write(out)
     file.close()
