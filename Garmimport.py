@@ -3,7 +3,9 @@ import os
 import re
 from datetime import datetime
 from datetime import timedelta
-
+import getopt
+import sys
+ 
 class Activity:
     def __init__(self, url, name, type, time, distance, duration):
         self.url = url
@@ -30,7 +32,7 @@ def get_activity(file):
     
     return Activity(url, name, type, time, distance, duration)
     
-def create_md(activity):
+def create_md(activity, out_folder):
     template = '''+++
 
 author = "Jacob Hell"
@@ -61,16 +63,32 @@ tags = [
     activityUrl=activity.url) 
     
     file_name = re.sub('\\W', '', '{} {}.md'.format(activity.name, activity.time))
-    absolute_file = 'content/activities/{}.md'.format(file_name)
+    absolute_file = '{}/{}.md'.format(out_folder, file_name)
     print('writing {}'.format(absolute_file))
     file = open(absolute_file, 'w')
     file.write(out)
     file.close()
     
-
-
-for filename in os.listdir('activities/'):
-    if 'summary.json' in filename:
-        file = open('activities/' + filename)
-        activity = get_activity(file)
-        create_md(activity)
+def main():
+    argv = sys.argv[1:]
+    out = '.'
+    activities_loc = 'activities'
+    
+    opts, args = getopt.getopt(argv,
+                    '',
+                    [ 'activities_loc=', 'out=' ])
+    
+    for opt, arg in opts:
+        if opt == "--out":
+            out = arg
+        elif opt == '--activities_loc':
+            activities_loc = arg
+    
+    for filename in os.listdir(activities_loc):
+        if 'summary.json' in filename:
+            file = open('{}/{}'.format(activities_loc, filename))
+            activity = get_activity(file)
+            create_md(activity, out)
+            
+if __name__ == "__main__":
+    main()
