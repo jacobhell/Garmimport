@@ -62,7 +62,7 @@ tags = [
     activityDuration=activity.duration,
     activityUrl=activity.url) 
     
-    file_name = re.sub('\\W', '', '{} {}.md'.format(activity.name, activity.time))
+    file_name = re.sub('\\W', '', '{} {}'.format(activity.name, activity.time))
     absolute_file = '{}/{}.md'.format(out_folder, file_name)
     print('writing {}'.format(absolute_file))
     file = open(absolute_file, 'w')
